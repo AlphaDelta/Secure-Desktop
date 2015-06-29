@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -14,8 +15,11 @@ namespace SecureDesktop
     public partial class DesktopAgent : Form
     {
         IntPtr Desktop = IntPtr.Zero;
-        public DesktopAgent(IntPtr Process, IntPtr Desktop)
+        string Bin = "";
+        public int ERROR = -1;
+        public DesktopAgent(IntPtr Process, IntPtr Desktop, string location)
         {
+            Bin = location;
             if (Process == IntPtr.Zero) this.Close();
             if (Desktop == IntPtr.Zero) this.Close();
             this.Desktop = Desktop;
@@ -47,15 +51,29 @@ namespace SecureDesktop
                     }
                 }
                 catch { }
-                try
+
+                if (File.Exists(Bin + ""))
                 {
-                    while (!this.IsDisposed)
+                    IntPtr hProc = IntPtr.Zero;
+
+                    WinAPI.STARTUPINFO si = new WinAPI.STARTUPINFO();
+                    si.lpDesktop = "securedesktop";
+                    si.dwFlags |= 0x00000020;
+                    WinAPI.PROCESS_INFORMATION pi = new WinAPI.PROCESS_INFORMATION();
+                    WinAPI.CreateProcess(null, @"C:\Windows\notepad.exe", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
+                    hProc = pi.hProcess;
+
+                    try
                     {
-                        Thread.Sleep(500);
-                        if (!WinAPI.GetExitCodeProcess(Process, out code) || code != 259) { break; }
+                        while (!this.IsDisposed)
+                        {
+                            Thread.Sleep(500);
+                            if (!WinAPI.GetExitCodeProcess(Process, out code) || code != 259) { break; }
+                        }
                     }
+                    catch { }
                 }
-                catch { }
+                else ERROR = 1;
                 if(!this.IsDisposed) this.Invoke((Action)delegate { this.Close(); });
             };
             bg.RunWorkerAsync();

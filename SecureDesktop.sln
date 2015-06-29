@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureDesktop", "SecureDesktop\SecureDesktop.csproj", "{A7E209DE-644A-400F-A850-ACCA69B11617}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopAgent", "DesktopAgent\DesktopAgent.csproj", "{09C006F9-0B28-4471-B885-0CCFA520E669}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cleanup", "Cleanup\Cleanup.csproj", "{09C006F9-0B28-4471-B885-0CCFA520E669}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

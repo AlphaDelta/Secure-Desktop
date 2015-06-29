@@ -7,8 +7,8 @@
     <ProjectGuid>{09C006F9-0B28-4471-B885-0CCFA520E669}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DesktopAgent</RootNamespace>
-    <AssemblyName>DesktopAgent</AssemblyName>
+    <RootNamespace>Cleanup</RootNamespace>
+    <AssemblyName>cleanup</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
