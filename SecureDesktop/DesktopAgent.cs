@@ -13,10 +13,6 @@ namespace SecureDesktop
 {
     public partial class DesktopAgent : Form
     {
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool GetExitCodeProcess(IntPtr hProcess, out uint lpExitCode);
-
         IntPtr Desktop = IntPtr.Zero;
         public DesktopAgent(IntPtr Process, IntPtr Desktop)
         {
@@ -33,7 +29,7 @@ namespace SecureDesktop
             FormClosing += delegate
             {
                 Gma.UserActivityMonitor.HookManager.KeyDown -= KeyboardHookDown;
-                Gma.UserActivityMonitor.HookManager.KeyUp += KeyboardHookUp;
+                Gma.UserActivityMonitor.HookManager.KeyUp -= KeyboardHookUp;
             };
 
             this.Opacity = 0;
@@ -46,8 +42,17 @@ namespace SecureDesktop
                 {
                     while (!this.IsDisposed)
                     {
-                        Thread.Sleep(100);
-                        if (!GetExitCodeProcess(Process, out code) || code != 259) { break; }
+                        Thread.Sleep(500);
+                        if (!WinAPI.GetExitCodeProcess(Process, out code) || code != 259) { break; }
+                    }
+                }
+                catch { }
+                try
+                {
+                    while (!this.IsDisposed)
+                    {
+                        Thread.Sleep(500);
+                        if (!WinAPI.GetExitCodeProcess(Process, out code) || code != 259) { break; }
                     }
                 }
                 catch { }
