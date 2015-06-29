@@ -109,10 +109,11 @@ namespace SecureDesktop
                 si.lpDesktop = "securedesktop";
                 si.dwFlags |= 0x00000020;
                 PROCESS_INFORMATION pi = new PROCESS_INFORMATION();
-                CreateProcess(null, @"C:\Program Files (x86)\Notepad++\notepad++.exe -nosession -notabbar C:\Windows\System32\drivers\etc\hosts", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
+                //CreateProcess(null, @"C:\Program Files (x86)\Notepad++\notepad++.exe -nosession -notabbar C:\Windows\System32\drivers\etc\hosts", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
+                CreateProcess(null, @"C:\Windows\notepad.exe", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
                 hProc = pi.hProcess;
 
-                DesktopAgent sf = new DesktopAgent(hProc);
+                DesktopAgent sf = new DesktopAgent(hProc, hNewDesktop);
                 //sf.FormClosing += (sender, e) => { passwd = passwordTextBox.Text; };
 
                 Application.Run(sf);
