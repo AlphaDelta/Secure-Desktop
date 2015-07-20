@@ -65,6 +65,7 @@
     <Compile Include="DesktopAgent.Designer.cs">
       <DependentUpon>DesktopAgent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Taskbar.cs" />
     <Compile Include="WinAPI.cs" />
   </ItemGroup>
   <ItemGroup>

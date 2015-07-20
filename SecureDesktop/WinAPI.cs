@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -87,5 +88,67 @@ namespace SecureDesktop
             public IntPtr hStdOutput;
             public IntPtr hStdError;
         }
+
+        public const int
+        ULW_ALPHA = 0x00000002,
+        WS_EX_LAYERED = 0x00080000,
+        WS_EX_TRANSPARENT = 0x00000020,
+        WS_EX_TOOLWINDOW = 0x00000080,
+        WS_EX_TOPMOST = 0x00000008;
+
+        public const byte AC_SRC_OVER = 0x00;
+        public const byte AC_SRC_ALPHA = 0x01;
+
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        struct ARGB
+        {
+            public byte Blue;
+            public byte Green;
+            public byte Red;
+            public byte Alpha;
+        }
+
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct BLENDFUNCTION
+        {
+            public byte BlendOp;
+            public byte BlendFlags;
+            public byte SourceConstantAlpha;
+            public byte AlphaFormat;
+        }
+
+
+        [DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
+        public static extern bool UpdateLayeredWindow(IntPtr hwnd, IntPtr hdcDst, ref Point pptDst, ref Size psize, IntPtr hdcSrc, ref Point pprSrc, Int32 crKey, ref BLENDFUNCTION pblend, Int32 dwFlags);
+
+        [DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
+        public static extern IntPtr GetDC(IntPtr hWnd);
+
+        [DllImport("user32.dll", ExactSpelling = true)]
+        public static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
+
+        [DllImport("gdi32.dll", ExactSpelling = true, SetLastError = true)]
+        public static extern IntPtr CreateCompatibleDC(IntPtr hDC);
+
+        [DllImport("gdi32.dll", ExactSpelling = true, SetLastError = true)]
+        public static extern bool DeleteDC(IntPtr hdc);
+
+        [DllImport("gdi32.dll", ExactSpelling = true)]
+        public static extern IntPtr SelectObject(IntPtr hDC, IntPtr hObject);
+
+        [DllImport("gdi32.dll", ExactSpelling = true, SetLastError = true)]
+        public static extern bool DeleteObject(IntPtr hObject);
+
+
+        public static IntPtr HWND_TOPMOST = new IntPtr(-1);
+        public const int
+        SWP_NOSIZE = 0x0001,
+        SWP_NOMOVE = 0x0002,
+        SWP_SHOWWINDOW = 0x0040;
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, int uFlags);
     }
 }

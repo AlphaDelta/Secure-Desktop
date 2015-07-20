@@ -15,6 +15,7 @@ namespace SecureDesktop
         static volatile bool workdone = false;
         static void Main(string[] args)
         {
+            Taskbar tb = new Taskbar(); //Get this first so that if we crash we wont be stuck in desktop limbo!
 
             IntPtr hOldDesktop = WinAPI.GetThreadDesktop(WinAPI.GetCurrentThreadId());
 
@@ -26,6 +27,7 @@ namespace SecureDesktop
             IntPtr hProc = IntPtr.Zero;
             BackgroundWorker bg = new BackgroundWorker();
             int ERROR = -1;
+            DesktopAgent sf = null;
             bg.DoWork += delegate
             {
                 WinAPI.SetThreadDesktop(hNewDesktop);
@@ -38,7 +40,7 @@ namespace SecureDesktop
                 WinAPI.CreateProcess(null, @"C:\Windows\notepad.exe", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
                 hProc = pi.hProcess;
 
-                DesktopAgent sf = new DesktopAgent(hProc, hNewDesktop, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\");
+                sf = new DesktopAgent(hProc, hNewDesktop, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\", tb);
                 //sf.FormClosing += (sender, e) => { passwd = passwordTextBox.Text; };
 
                 Application.Run(sf);
@@ -46,8 +48,12 @@ namespace SecureDesktop
                 workdone = true;
             };
             bg.RunWorkerAsync();
-            
-            while (!workdone) System.Threading.Thread.Sleep(100);
+
+            while (!workdone)
+            {
+                System.Threading.Thread.Sleep(100);
+                //if(sf != null && !sf.IsDisposed) WinAPI.SetWindowPos(sf.Handle, new IntPtr(-1), tb.Bounds.Left, tb.Bounds.Top, tb.Bounds.Width, tb.Bounds.Height, 0);
+            }
 
             WinAPI.SwitchDesktop(hOldDesktop);
 
