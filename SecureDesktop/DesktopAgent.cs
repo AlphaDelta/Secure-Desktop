@@ -192,18 +192,23 @@ namespace SecureDesktop
                     TextRenderer.DrawText(g, time, font, textbounds, Color.White, (TextFormatFlags.VerticalCenter | TextFormatFlags.Right));
 
                     g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
-                    g.DrawImage(Properties.Resources.lock_icon, 5, 3);
+                    g.DrawImage(Properties.Resources.lock_icon, 5, (int)Math.Round(tb.Bounds.Height / 2f - Properties.Resources.lock_icon.Size.Height / 2f));
                 }
                 else
                 {
                     string time = DateTime.Now.ToString("h:mm tt");
-                    Rectangle textbounds = new Rectangle(0, 10, tb.Bounds.Width, tb.Bounds.Height - 20);
-                    Rectangle shadowbounds = new Rectangle(0, 11, tb.Bounds.Width, tb.Bounds.Height - 20);
+                    Rectangle textbounds = new Rectangle(0, 42, tb.Bounds.Width, tb.Bounds.Height - 52);
+                    Rectangle shadowbounds = new Rectangle(0, 43, tb.Bounds.Width, tb.Bounds.Height - 52);
                     TextRenderer.DrawText(g, "Secure Desktop", font, shadowbounds, shadow, (TextFormatFlags.HorizontalCenter | TextFormatFlags.Top | TextFormatFlags.WordBreak));
                     TextRenderer.DrawText(g, "Secure Desktop", font, textbounds, Color.White, (TextFormatFlags.HorizontalCenter | TextFormatFlags.Top | TextFormatFlags.WordBreak));
 
                     TextRenderer.DrawText(g, time, font, shadowbounds, shadow, (TextFormatFlags.HorizontalCenter | TextFormatFlags.Bottom | TextFormatFlags.WordBreak));
                     TextRenderer.DrawText(g, time, font, textbounds, Color.White, (TextFormatFlags.HorizontalCenter | TextFormatFlags.Bottom | TextFormatFlags.WordBreak));
+
+
+
+                    g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+                    g.DrawImage(Properties.Resources.lock_icon, (int)Math.Round(tb.Bounds.Width / 2f - Properties.Resources.lock_icon.Size.Width / 2f), 5);
                 }
             }
 
