@@ -71,7 +71,7 @@ namespace SecureDesktop
                     si.lpDesktop = "securedesktop";
                     si.dwFlags |= 0x00000020;
                     WinAPI.PROCESS_INFORMATION pi = new WinAPI.PROCESS_INFORMATION();
-                    WinAPI.CreateProcess(null, cleanup, IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
+                    WinAPI.CreateProcess(null, cleanup + " -flag", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
                     hProc = pi.hProcess;
                     //if (!this.IsDisposed) this.Invoke((Action)delegate { this.Close(); });
                     try
@@ -102,22 +102,51 @@ namespace SecureDesktop
             base.OnLoad(e);
             this.Update();
         }
-
-        bool ctrl = false;
+        //C:\Users\Administrator.AUD122024G\Git\Secure-Desktop\Cleanup\bin\Debug
+        bool ctrl = false, shift = false, alt = false;
+        const string taskmgr = @"C:\Windows\System32\taskmgr.exe";
         void KeyboardHookDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.PrintScreen && !ctrl) e.SuppressKeyPress = true;
             else if (e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey) ctrl = true;
-            else if (e.KeyCode == Keys.K && ctrl) this.Close();
-            else if (e.KeyCode == Keys.E && ctrl)
+            else if (e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey) shift = true;
+            else if (e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu) alt = true;
+            else if (e.KeyCode == Keys.K && ctrl && alt) this.Close();
+            else if (e.KeyCode == Keys.E && ctrl && alt)
                 MessageBox.Show("Desktop handle: " + Desktop.ToString());
-            else if (e.KeyCode == Keys.T && ctrl)
+            else if (e.KeyCode == Keys.T && ctrl && alt)
                 WinAPI.SetWindowPos(this.Handle, WinAPI.HWND_TOPMOST, 0, 0, 0, 0, WinAPI.SWP_NOMOVE | WinAPI.SWP_NOSIZE | WinAPI.SWP_SHOWWINDOW);
+            else if (e.KeyCode == Keys.V && ctrl && alt)
+            {
+                if (File.Exists(cleanup))
+                {
+                    WinAPI.STARTUPINFO si = new WinAPI.STARTUPINFO();
+                    si.lpDesktop = "securedesktop";
+                    si.dwFlags |= 0x00000020;
+                    WinAPI.PROCESS_INFORMATION pi = new WinAPI.PROCESS_INFORMATION();
+                    WinAPI.CreateProcess(null, cleanup + " -view", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
+                }
+            }
+            else if (e.KeyCode == Keys.Escape && ctrl && shift) //Task manager wont open by default so we'll have to do it manually and supress it
+            {
+                e.SuppressKeyPress = true;
+
+                if (File.Exists(taskmgr))
+                {
+                    WinAPI.STARTUPINFO si = new WinAPI.STARTUPINFO();
+                    si.lpDesktop = "securedesktop";
+                    si.dwFlags |= 0x00000020;
+                    WinAPI.PROCESS_INFORMATION pi = new WinAPI.PROCESS_INFORMATION();
+                    WinAPI.CreateProcess(null, taskmgr, IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
+                }
+            }
         }
 
         void KeyboardHookUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.LControlKey || e.KeyCode == Keys.RControlKey) ctrl = false;
+            else if (e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey) shift = false;
+            else if (e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu) alt = false;
         }
 
         public delegate void Action();

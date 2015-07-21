@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureDesktop", "SecureDesk
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cleanup-CLI", "Cleanup-CLI\Cleanup-CLI.csproj", "{09C006F9-0B28-4471-B885-0CCFA520E669}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cleanup", "Cleanup\Cleanup.csproj", "{3513ACFD-8BAE-4478-B008-F6B6C53AECCA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{09C006F9-0B28-4471-B885-0CCFA520E669}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09C006F9-0B28-4471-B885-0CCFA520E669}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09C006F9-0B28-4471-B885-0CCFA520E669}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3513ACFD-8BAE-4478-B008-F6B6C53AECCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3513ACFD-8BAE-4478-B008-F6B6C53AECCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3513ACFD-8BAE-4478-B008-F6B6C53AECCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3513ACFD-8BAE-4478-B008-F6B6C53AECCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
