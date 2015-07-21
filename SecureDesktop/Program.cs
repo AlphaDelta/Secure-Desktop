@@ -38,6 +38,7 @@ namespace SecureDesktop
                 WinAPI.PROCESS_INFORMATION pi = new WinAPI.PROCESS_INFORMATION();
                 //CreateProcess(null, @"C:\Program Files (x86)\Notepad++\notepad++.exe -nosession -notabbar C:\Windows\System32\drivers\etc\hosts", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
                 WinAPI.CreateProcess(null, @"C:\Windows\notepad.exe", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
+                //WinAPI.CreateProcess(null, @"C:\Program Files (x86)\Mozilla Firefox\firefox.exe -no-remote -private ""about:blank""", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
                 hProc = pi.hProcess;
 
                 sf = new DesktopAgent(hProc, hNewDesktop, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\", tb);

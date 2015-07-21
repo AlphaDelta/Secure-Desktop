@@ -73,7 +73,7 @@ namespace SecureDesktop
                     WinAPI.PROCESS_INFORMATION pi = new WinAPI.PROCESS_INFORMATION();
                     WinAPI.CreateProcess(null, cleanup, IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
                     hProc = pi.hProcess;
-                    if (!this.IsDisposed) this.Invoke((Action)delegate { this.Close(); });
+                    //if (!this.IsDisposed) this.Invoke((Action)delegate { this.Close(); });
                     try
                     {
                         while (!this.IsDisposed)
