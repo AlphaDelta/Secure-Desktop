@@ -183,13 +183,16 @@ namespace SecureDesktop
                 if (tb.Position == TaskbarPosition.Bottom || tb.Position == TaskbarPosition.Top)
                 {
                     string time = DateTime.Now.ToString("h:mm:ss tt");
-                    Rectangle textbounds = new Rectangle(10, 0, tb.Bounds.Width - 20, tb.Bounds.Height);
-                    Rectangle shadowbounds = new Rectangle(10, 1, tb.Bounds.Width - 20, tb.Bounds.Height);
+                    Rectangle textbounds = new Rectangle(42, 0, tb.Bounds.Width - 52, tb.Bounds.Height);
+                    Rectangle shadowbounds = new Rectangle(42, 1, tb.Bounds.Width - 52, tb.Bounds.Height);
                     TextRenderer.DrawText(g, "SecureDesktop", font, shadowbounds, shadow, (TextFormatFlags.VerticalCenter | TextFormatFlags.Left));
                     TextRenderer.DrawText(g, "SecureDesktop", font, textbounds, Color.White, (TextFormatFlags.VerticalCenter | TextFormatFlags.Left));
 
                     TextRenderer.DrawText(g, time, font, shadowbounds, shadow, (TextFormatFlags.VerticalCenter | TextFormatFlags.Right));
                     TextRenderer.DrawText(g, time, font, textbounds, Color.White, (TextFormatFlags.VerticalCenter | TextFormatFlags.Right));
+
+                    g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+                    g.DrawImage(Properties.Resources.lock_icon, 5, 3);
                 }
                 else
                 {
