@@ -48,7 +48,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Gma.UserActivityMonitor">
-      <HintPath>..\..\WindowsFormsApplication1\WindowsFormsApplication1\Gma.UserActivityMonitor.dll</HintPath>
+      <HintPath>..\dependencies\Gma.UserActivityMonitor.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
