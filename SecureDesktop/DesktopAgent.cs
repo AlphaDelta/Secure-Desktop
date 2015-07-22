@@ -102,9 +102,8 @@ namespace SecureDesktop
             base.OnLoad(e);
             this.Update();
         }
-        //C:\Users\Administrator.AUD122024G\Git\Secure-Desktop\Cleanup\bin\Debug
+
         bool ctrl = false, shift = false, alt = false;
-        const string taskmgr = @"C:\Windows\System32\taskmgr.exe";
         void KeyboardHookDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.PrintScreen && !ctrl) e.SuppressKeyPress = true;
@@ -131,13 +130,18 @@ namespace SecureDesktop
             {
                 e.SuppressKeyPress = true;
 
-                if (File.Exists(taskmgr))
+                if(Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 2 &&
+                   File.Exists(@"C:\Windows\System32\Taskmgr.exe"))
+                {
+                    WinAPI.ShellExecute(this.Handle, "runas", @"C:\Windows\System32\Taskmgr.exe", null, null, WinAPI.ShowCommands.SW_SHOWNORMAL);
+                }
+                else if (File.Exists(@"C:\Windows\System32\taskmgr.exe"))
                 {
                     WinAPI.STARTUPINFO si = new WinAPI.STARTUPINFO();
                     si.lpDesktop = "securedesktop";
                     si.dwFlags |= 0x00000020;
                     WinAPI.PROCESS_INFORMATION pi = new WinAPI.PROCESS_INFORMATION();
-                    WinAPI.CreateProcess(null, taskmgr, IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
+                    WinAPI.CreateProcess(null, @"C:\Windows\System32\taskmgr.exe", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
                 }
             }
         }

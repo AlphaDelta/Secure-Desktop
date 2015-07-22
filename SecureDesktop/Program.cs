@@ -42,7 +42,6 @@ namespace SecureDesktop
                 hProc = pi.hProcess;
 
                 sf = new DesktopAgent(hProc, hNewDesktop, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\", tb);
-                //sf.FormClosing += (sender, e) => { passwd = passwordTextBox.Text; };
 
                 Application.Run(sf);
                 ERROR = sf.ERROR;
