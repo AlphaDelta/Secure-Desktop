@@ -29,9 +29,9 @@ namespace SecureDesktop
 
             StringBuilder sb = new StringBuilder();
             string procline = String.Format("\"{0}\"", String.Join("\" \"", args));
-            string ext = Path.GetExtension(args[0]);
+            string ext = Path.GetExtension(args[0]).ToLower();
 
-            if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 2)
+            //if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 2)
             {
                 int i = 0;
                 for (; i < 10; i++)
@@ -46,7 +46,7 @@ namespace SecureDesktop
                         string file = "";
                         if (!ResolveExtension(ext, ref file)) break;
                         procline = String.Format("\"{0}\" {1}", file, procline);
-                        ext = Path.GetExtension(file);
+                        ext = Path.GetExtension(file).ToLower();
                     }
                     else break;
                 }
@@ -78,7 +78,6 @@ namespace SecureDesktop
                     WinAPI.SetThreadDesktop(hNewDesktop);
                     try
                     {
-
                         WinAPI.STARTUPINFO si = new WinAPI.STARTUPINFO();
                         si.lpDesktop = "securedesktop";
                         si.dwFlags |= 0x00000020;
