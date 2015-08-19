@@ -33,6 +33,11 @@ namespace SecureDesktop_GUI
                 MessageBox.Show("Missing Secure Desktop executable", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
+            if (!File.Exists(location + "\\Gma.UserActivityMonitor.dll"))
+            {
+                MessageBox.Show("Missing Gma.UserActivityMonitor.dll", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
 
             return true;
         }
