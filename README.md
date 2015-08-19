@@ -24,7 +24,7 @@ Simply drop a file into the form, or select a file via File > Open, then click o
 
 Run `SecureDesktop.exe` with the file and arguments.
 
-Example: `SecureDesctop.exe "C:\Users\Admin\Documents\file with spaces.exe" -some -executable -parameters`
+Example: `SecureDesktop.exe "C:\Users\Admin\Documents\file with spaces.exe" -some -executable -parameters`
 
 ## Limitations and faults
 
