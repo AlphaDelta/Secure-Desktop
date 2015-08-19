@@ -27,7 +27,8 @@ namespace SecureDesktop
                 return;
             }
 
-            string procline = String.Join(" ", args);
+            StringBuilder sb = new StringBuilder();
+            string procline = String.Format("\"{0}\"", String.Join("\" \"", args));
             string ext = Path.GetExtension(args[0]);
 
             if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 2)
@@ -141,7 +142,7 @@ namespace SecureDesktop
             uint ret = WinAPI.AssocQueryString(WinAPI.AssocF.None, WinAPI.AssocStr.Executable, ext, null, null, ref length);
             if (ret == WinAPI.S_FALSE)
             {
-                StringBuilder sb = new StringBuilder((int)length); // (length-1) will probably work too as the marshaller adds null termination
+                StringBuilder sb = new StringBuilder((int)length);
                 ret = WinAPI.AssocQueryString(WinAPI.AssocF.None, WinAPI.AssocStr.Executable, ext, null, sb, ref length);
                 if (ret == WinAPI.S_OK)
                 {
