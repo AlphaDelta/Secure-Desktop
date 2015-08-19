@@ -42,6 +42,8 @@ namespace SecureDesktop_GUI
             {
                 IntPtr hProc = IntPtr.Zero;
 
+
+
                 WinAPI.STARTUPINFO si = new WinAPI.STARTUPINFO();
                 WinAPI.PROCESS_INFORMATION pi = new WinAPI.PROCESS_INFORMATION();
                 WinAPI.CreateProcess(null, String.Format("\"{0}\" \"{1}\"", Program.location + "\\SecureDesktop.exe", fileloc), IntPtr.Zero, IntPtr.Zero, false, WinAPI.CREATE_NO_WINDOW, IntPtr.Zero, null, ref si, out pi);

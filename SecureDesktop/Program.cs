@@ -28,6 +28,33 @@ namespace SecureDesktop
             }
 
             string procline = String.Join(" ", args);
+            string ext = Path.GetExtension(args[0]);
+
+            if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor >= 2)
+            {
+                int i = 0;
+                for (; i < 10; i++)
+                {
+                    if (ext == ".dll")
+                    {
+                        procline = String.Format("{0} {1}", @"rundll32", procline);
+                        break;
+                    }
+                    else if (ext != ".exe")
+                    {
+                        string file = "";
+                        if (!ResolveExtension(ext, ref file)) break;
+                        procline = String.Format("\"{0}\" {1}", file, procline);
+                        ext = Path.GetExtension(file);
+                    }
+                    else break;
+                }
+                if (i == 10)
+                {
+                    Console.WriteLine("Could not locate default program");
+                    return;
+                }
+            }
 
             Taskbar tb = new Taskbar(); //Get this first so that if we crash we wont be stuck in desktop limbo!
 
@@ -50,6 +77,7 @@ namespace SecureDesktop
                     WinAPI.SetThreadDesktop(hNewDesktop);
                     try
                     {
+
                         WinAPI.STARTUPINFO si = new WinAPI.STARTUPINFO();
                         si.lpDesktop = "securedesktop";
                         si.dwFlags |= 0x00000020;
@@ -65,9 +93,7 @@ namespace SecureDesktop
                             ERROR = sf.ERROR;
                         }
                         else
-                        {
                             ERROR = 4;
-                        }
                     }
                     catch (Exception e) { ERROR = 2; da_ex = e; }
                     finally { workdone = true; }
@@ -106,6 +132,24 @@ namespace SecureDesktop
                     MessageBox.Show(String.Format("Failed to start process with error code '{0:X8}'", Marshal.GetLastWin32Error()), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
             }
+        }
+
+        static bool ResolveExtension(string ext, ref string def)
+        {
+
+            uint length = 0;
+            uint ret = WinAPI.AssocQueryString(WinAPI.AssocF.None, WinAPI.AssocStr.Executable, ext, null, null, ref length);
+            if (ret == WinAPI.S_FALSE)
+            {
+                StringBuilder sb = new StringBuilder((int)length); // (length-1) will probably work too as the marshaller adds null termination
+                ret = WinAPI.AssocQueryString(WinAPI.AssocF.None, WinAPI.AssocStr.Executable, ext, null, sb, ref length);
+                if (ret == WinAPI.S_OK)
+                {
+                    def = sb.ToString();
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
