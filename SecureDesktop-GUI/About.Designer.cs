@@ -86,7 +86,7 @@
             this.labelVersion.Name = "labelVersion";
             this.labelVersion.Size = new System.Drawing.Size(49, 13);
             this.labelVersion.TabIndex = 5;
-            this.labelVersion.Text = "v0.0.0.0";
+            this.labelVersion.Text = "v1.0.0.1";
             // 
             // labelCreator
             // 
@@ -104,7 +104,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(375, 196);
+            this.ClientSize = new System.Drawing.Size(371, 192);
             this.ControlBox = false;
             this.Controls.Add(this.labelCreator);
             this.Controls.Add(this.labelVersion);
