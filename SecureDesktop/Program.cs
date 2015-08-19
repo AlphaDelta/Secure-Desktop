@@ -15,6 +15,20 @@ namespace SecureDesktop
         static volatile bool workdone = false;
         static void Main(string[] args)
         {
+            if (args.Length < 1)
+            {
+                Console.WriteLine("Please specify a file to run");
+                return;
+            }
+
+            if (!File.Exists(args[0]))
+            {
+                Console.WriteLine("The file you specified could not be found");
+                return;
+            }
+
+            string procline = String.Join(" ", args);
+
             Taskbar tb = new Taskbar(); //Get this first so that if we crash we wont be stuck in desktop limbo!
 
             IntPtr hOldDesktop = WinAPI.GetThreadDesktop(WinAPI.GetCurrentThreadId());
@@ -36,9 +50,7 @@ namespace SecureDesktop
                 si.lpDesktop = "securedesktop";
                 si.dwFlags |= 0x00000020;
                 WinAPI.PROCESS_INFORMATION pi = new WinAPI.PROCESS_INFORMATION();
-                //CreateProcess(null, @"C:\Program Files (x86)\Notepad++\notepad++.exe -nosession -notabbar C:\Windows\System32\drivers\etc\hosts", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
-                WinAPI.CreateProcess(null, @"C:\Windows\notepad.exe", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
-                //WinAPI.CreateProcess(null, @"C:\Program Files (x86)\Mozilla Firefox\firefox.exe -no-remote -private ""about:blank""", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
+                WinAPI.CreateProcess(null, procline, IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
                 hProc = pi.hProcess;
 
                 sf = new DesktopAgent(hProc, hNewDesktop, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\", tb);

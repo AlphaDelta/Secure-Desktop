@@ -69,7 +69,7 @@ namespace SecureDesktop
 
                     WinAPI.STARTUPINFO si = new WinAPI.STARTUPINFO();
                     si.lpDesktop = "securedesktop";
-                    si.dwFlags |= 0x00000020;
+                    //si.dwFlags |= 0x00000020;
                     WinAPI.PROCESS_INFORMATION pi = new WinAPI.PROCESS_INFORMATION();
                     WinAPI.CreateProcess(null, cleanup + " -flag", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
                     hProc = pi.hProcess;
@@ -121,7 +121,7 @@ namespace SecureDesktop
                 {
                     WinAPI.STARTUPINFO si = new WinAPI.STARTUPINFO();
                     si.lpDesktop = "securedesktop";
-                    si.dwFlags |= 0x00000020;
+                    //si.dwFlags |= 0x00000020;
                     WinAPI.PROCESS_INFORMATION pi = new WinAPI.PROCESS_INFORMATION();
                     WinAPI.CreateProcess(null, cleanup + " -view", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
                 }
@@ -139,7 +139,7 @@ namespace SecureDesktop
                 {
                     WinAPI.STARTUPINFO si = new WinAPI.STARTUPINFO();
                     si.lpDesktop = "securedesktop";
-                    si.dwFlags |= 0x00000020;
+                    //si.dwFlags |= 0x00000020;
                     WinAPI.PROCESS_INFORMATION pi = new WinAPI.PROCESS_INFORMATION();
                     WinAPI.CreateProcess(null, @"C:\Windows\System32\taskmgr.exe", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
                 }
