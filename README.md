@@ -12,6 +12,20 @@ Secure Desktop is a tool for windows to open programs in a safe area where keylo
    * Ctrl + Alt + V - View processes currently open in the secure desktop.
    * Ctrl + Shift + Esc - Open Task Manager in the secure desktop.
 
+## Using Secure Desktop
+
+#### GUI
+
+<img src="http://i.imgur.com/oN6Icdl.png" />
+
+Simply drop a file into the form, or select a file via File > Open, then click on the 'Run' button in the bottom left corner
+
+#### CLI
+
+Run `SecureDesktop.exe` with the file and arguments.
+
+Example: `SecureDesctop.exe "C:\Users\Admin\Documents\file with spaces.exe" -some -executable -parameters`
+
 ## Limitations and faults
 
 The way Secure Desktop works is that a new desktop is created that cannot be accessed via the WinAPI, which means mouse and keyboard hooks in the main desktop will not function inside of it.
