@@ -5,6 +5,8 @@ Secure Desktop is a tool for Windows to open programs in a safe area where keylo
 Software keyloggers work by setting up a [Windows hook](https://msdn.microsoft.com/en-us/library/windows/desktop/ms644985.aspx) that tells Windows that whenever the user [presses a key](https://msdn.microsoft.com/en-us/library/windows/desktop/ms644959.aspx#wh_keyboard_llhook) or [uses their mouse](https://msdn.microsoft.com/en-us/library/windows/desktop/ms644959.aspx#wh_mouse_llhook) to tell the keylogger what keys were pressed, where your mouse moves, and where your mouse clicks.
 Secure Desktop [opens a new desktop](https://msdn.microsoft.com/en-us/library/windows/desktop/ms682124.aspx) and then opens the program you chose inside of it, Windows prevents programs from accessing desktops that they havent been opened inside which means any keyloggers opened inside of your regular desktop cannot access your keyboard or mouse operations inside of the secure desktop and vice versa.
 
+This technique is the same technique used in the UAC, ctrl+alt+del screen, and even the login screen to prevent keyloggers from logging your sensitive information and forcing you to click on things you don't want to (eg allowing administrative access to an application).
+
 ## Features
 
  * Runs under the .NET Framework 2.0
