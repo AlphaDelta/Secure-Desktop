@@ -84,9 +84,9 @@
             this.labelVersion.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelVersion.Location = new System.Drawing.Point(146, 58);
             this.labelVersion.Name = "labelVersion";
-            this.labelVersion.Size = new System.Drawing.Size(49, 13);
+            this.labelVersion.Size = new System.Drawing.Size(72, 13);
             this.labelVersion.TabIndex = 5;
-            this.labelVersion.Text = "v1.0.3.1";
+            this.labelVersion.Text = "v1.1.0.0-rc.1";
             // 
             // labelCreator
             // 
