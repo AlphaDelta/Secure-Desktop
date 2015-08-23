@@ -12,6 +12,12 @@ namespace Cleanup
             AutoProcList = new List<ProcessInfo>();
         public static bool ViewOnly = false;
 
+        static string[] autoterm =
+        {
+            "ctfmon.exe", //Does not auto-terminate on Windows 8 (possibly 7 as well)
+            "jpnime.exe", //Japanese Input Method Editor
+        };
+
         [STAThread]
         static void Main(string[] args)
         {
@@ -58,7 +64,16 @@ namespace Cleanup
                     if (flag)
                     {
                         string name = proc.szExeFile.ToLower();
-                        if (name == "ctfmon.exe" || name == "jpnime.exe")
+
+                        bool bautoterm = false;
+                        foreach(string s in autoterm)
+                            if (name == s)
+                            {
+                                bautoterm = true;
+                                break;
+                            }
+
+                        if (bautoterm)
                             AutoProcList.Add(new ProcessInfo(proc.th32ProcessID, proc.szExeFile));
                         else if (name != "cleanup.exe")
                             ProcList.Add(new ProcessInfo(proc.th32ProcessID, proc.szExeFile));
