@@ -15,6 +15,17 @@ namespace SecureDesktop
         static volatile bool workdone = false;
         static void Main(string[] args)
         {
+            Process[] processes = Process.GetProcessesByName("SecureDesktop.exe");
+            if (processes.Length > 0)
+            {
+                Console.WriteLine("Secure Desktop is already running (proc)");
+                return;
+            }
+            if (File.Exists("securedesktop.lock"))
+            {
+                Console.WriteLine("Secure Desktop is already running (lock)");
+                return;
+            }
             if (args.Length < 1)
             {
                 Console.WriteLine("Please specify a file to run");
@@ -26,6 +37,8 @@ namespace SecureDesktop
                 Console.WriteLine("The file you specified could not be found");
                 return;
             }
+
+            File.Create("securedesktop.lock").Close();
 
             StringBuilder sb = new StringBuilder();
             string procline = String.Format("\"{0}\"", String.Join("\" \"", args));
@@ -178,6 +191,8 @@ namespace SecureDesktop
                     MessageBox.Show(String.Format("Failed to start process with error code '{0:X8}'", Marshal.GetLastWin32Error()), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
             }
+
+            if (File.Exists("securedesktop.lock")) File.Delete("securedesktop.lock");
         }
 
         static bool ResolveExtension(string ext, ref string def)

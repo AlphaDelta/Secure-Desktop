@@ -57,9 +57,10 @@ namespace Cleanup
                     //TODO: Rework this to rely on pointers rather than names so as to prevent malicious programs from bypassing cleanup
                     if (flag)
                     {
-                        if (proc.szExeFile == "ctfmon.exe")
+                        string name = proc.szExeFile.ToLower();
+                        if (name == "ctfmon.exe" || name == "jpnime.exe")
                             AutoProcList.Add(new ProcessInfo(proc.th32ProcessID, proc.szExeFile));
-                        else if (proc.szExeFile != "Cleanup.exe")
+                        else if (name != "cleanup.exe")
                             ProcList.Add(new ProcessInfo(proc.th32ProcessID, proc.szExeFile));
                     }
                 } while (WinAPI.Process32Next(snapshot, ref proc));
