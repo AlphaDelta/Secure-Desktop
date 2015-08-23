@@ -65,6 +65,13 @@ namespace SecureDesktop_GUI
 
                 labelTime.Text = String.Format("Secure Desktop ran for {0:0}m{1:0}s", stop.Elapsed.TotalMinutes, stop.Elapsed.Seconds);
             };
+
+            labelFile.SizeChanged += delegate
+            {
+                if (labelFile.Width < 260) this.Width = 428;
+                else
+                    this.Width = labelFile.Width + 168;
+            };
         }
 
         Image GetIcon(string file)
