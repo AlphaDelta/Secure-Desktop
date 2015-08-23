@@ -148,12 +148,13 @@ namespace SecureDesktop_GUI
 
         private void menuFileOpen_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            if (ofd.ShowDialog() != System.Windows.Forms.DialogResult.OK) { ofd.Dispose(); return; }
+            using (var ofd = new OpenFileDialog())
+            {
+                if (ofd.ShowDialog() != DialogResult.OK)
+                    return;
 
-            LoadFile(ofd.FileName);
-
-            ofd.Dispose();
+                LoadFile(ofd.FileName);
+            }
         }
 
         private void menuFileExit_Click(object sender, EventArgs e)
@@ -163,7 +164,10 @@ namespace SecureDesktop_GUI
 
         private void menuHelpAbout_Click(object sender, EventArgs e)
         {
-            new About().ShowDialog(); //It should automatically dispose on close
+            using (var form = new About())
+            {
+                form.ShowDialog();
+            }
         }
     }
 }
