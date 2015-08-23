@@ -7,7 +7,9 @@ namespace Cleanup
 {
     static class Program
     {
-        public static List<ProcessInfo> ProcList = new List<ProcessInfo>();
+        public static List<ProcessInfo>
+            ProcList = new List<ProcessInfo>(),
+            AutoProcList = new List<ProcessInfo>();
         public static bool ViewOnly = false;
 
         [STAThread]
@@ -51,10 +53,15 @@ namespace Cleanup
                     bool flag = false;
                     foreach (uint i in Procs) if (i == proc.th32ProcessID) { flag = true; break; }
                     //TODO: Check if ctfmon.exe closes correctly, if not remove it from the filter
+                    //   -  It does not close correctly on Windows 8, check on Windows 7 later. Possibly due to the lack of DESKTOP_ENUMERATE?
                     //TODO: Rework this to rely on pointers rather than names so as to prevent malicious programs from bypassing cleanup
-                    if (flag && proc.szExeFile != "ctfmon.exe" && proc.szExeFile != "Cleanup.exe")
-                        //Console.WriteLine("Proc id: " + proc.th32ProcessID + "\nProc name: " + proc.szExeFile);
-                        ProcList.Add(new ProcessInfo(proc.th32ProcessID, proc.szExeFile));
+                    if (flag)
+                    {
+                        if (proc.szExeFile == "ctfmon.exe")
+                            AutoProcList.Add(new ProcessInfo(proc.th32ProcessID, proc.szExeFile));
+                        else if (proc.szExeFile != "Cleanup.exe")
+                            ProcList.Add(new ProcessInfo(proc.th32ProcessID, proc.szExeFile));
+                    }
                 } while (WinAPI.Process32Next(snapshot, ref proc));
             }
             else
@@ -69,6 +76,21 @@ namespace Cleanup
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new Main());
+            }
+            if (AutoProcList.Count > 0)
+            {
+                uint code;
+                foreach (ProcessInfo info in Program.AutoProcList)
+                {
+                    IntPtr handle = WinAPI.OpenProcess(WinAPI.ProcessAccessFlags.Terminate | WinAPI.ProcessAccessFlags.QueryInformation, false, (int)info.ID);
+                    if (handle == null || handle == IntPtr.Zero)
+                    {
+                        MessageBox.Show("Could not open handle for " + info.Name + ", please manually terminate this process before continuing", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        continue;
+                    }
+                    if (WinAPI.GetExitCodeProcess(handle, out code) && code == 259)
+                        WinAPI.TerminateProcess(handle, 1);
+                }
             }
         }
     }
