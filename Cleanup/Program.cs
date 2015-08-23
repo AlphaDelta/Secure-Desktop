@@ -52,6 +52,7 @@ namespace Cleanup
 
             WinAPI.PROCESSENTRY32 proc = new WinAPI.PROCESSENTRY32();
             proc.dwSize = (UInt32)Marshal.SizeOf(typeof(WinAPI.PROCESSENTRY32));
+            uint currpid = (uint)System.Diagnostics.Process.GetCurrentProcess().Id;
             if (WinAPI.Process32First(snapshot, ref proc))
             {
                 do
@@ -60,7 +61,6 @@ namespace Cleanup
                     foreach (uint i in Procs) if (i == proc.th32ProcessID) { flag = true; break; }
                     //TODO: Check if ctfmon.exe closes correctly, if not remove it from the filter
                     //   -  It does not close correctly on Windows 8, check on Windows 7 later. Possibly due to the lack of DESKTOP_ENUMERATE?
-                    //TODO: Rework this to rely on pointers rather than names so as to prevent malicious programs from bypassing cleanup
                     if (flag)
                     {
                         string name = proc.szExeFile.ToLower();
@@ -75,7 +75,7 @@ namespace Cleanup
 
                         if (bautoterm)
                             AutoProcList.Add(new ProcessInfo(proc.th32ProcessID, proc.szExeFile));
-                        else if (name != "cleanup.exe")
+                        else if (proc.th32ProcessID != currpid)
                             ProcList.Add(new ProcessInfo(proc.th32ProcessID, proc.szExeFile));
                     }
                 } while (WinAPI.Process32Next(snapshot, ref proc));
