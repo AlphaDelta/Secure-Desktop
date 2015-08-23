@@ -57,12 +57,58 @@ namespace SecureDesktop
                 }
             }
 
+            /* Entropy collection */
+            int[] entropy = new int[ISAAC.SIZE];
+            int ei = 0;
+
+            WinAPI.MEMORYSTATUSEX memStatus = new WinAPI.MEMORYSTATUSEX();
+            if (WinAPI.GlobalMemoryStatusEx(memStatus))
+            {
+                entropy[0] = (int)memStatus.ullAvailPhys;
+                entropy[1] = (int)memStatus.ullAvailVirtual;
+                entropy[2] = (int)memStatus.ullAvailPageFile;
+                ei = 2;
+            }
+
+            WinAPI.POINT pt;
+            if (WinAPI.GetCursorPos(out pt))
+            {
+                entropy[ei + 1] = pt.X;
+                entropy[ei + 2] = pt.Y;
+                ei += 2;
+            }
+
+            uint spc, bps, nofc, tnoc;
+            if (WinAPI.GetDiskFreeSpace(null, out spc, out bps, out nofc, out tnoc))
+            {
+                entropy[ei + 1] = (int)spc;
+                entropy[ei + 2] = (int)bps;
+                entropy[ei + 3] = (int)nofc;
+                entropy[ei + 4] = (int)tnoc;
+                ei += 4;
+            }
+
+            ISAAC csprng = new ISAAC(entropy);
+
+            for (int i = 0; i < 3; i++) csprng.Isaac();
+
+            StringBuilder desktopname = new StringBuilder(16);
+            const int min = 0x61;
+            const int max = 0x7A;
+            const int diff = max - min;
+            for (int i = 0; i < 16; i++)
+                desktopname.Append(
+                    (char)(((int)Math.Abs(csprng.mem[i]) % diff) + min)
+                    );
+
+            string dname = desktopname.ToString();
+
             Taskbar tb = new Taskbar(); //Get this first so that if we crash we wont be stuck in desktop limbo!
 
             IntPtr hOldDesktop = WinAPI.GetThreadDesktop(WinAPI.GetCurrentThreadId());
 
-            IntPtr hNewDesktop = WinAPI.CreateDesktop("securedesktop",
-            IntPtr.Zero, IntPtr.Zero, 0, (uint)WinAPI.DESKTOP_ACCESS.GENERIC_ALL, IntPtr.Zero);
+            IntPtr hNewDesktop = WinAPI.CreateDesktop(dname,
+            IntPtr.Zero, IntPtr.Zero, 0, (uint)WinAPI.DESKTOP_ACCESS.CUSTOM_SECURE, IntPtr.Zero);
 
             int ERROR = -1;
             IntPtr hProc = IntPtr.Zero;
@@ -79,7 +125,7 @@ namespace SecureDesktop
                     try
                     {
                         WinAPI.STARTUPINFO si = new WinAPI.STARTUPINFO();
-                        si.lpDesktop = "securedesktop";
+                        si.lpDesktop = dname;
                         si.dwFlags |= 0x00000020;
                         WinAPI.PROCESS_INFORMATION pi = new WinAPI.PROCESS_INFORMATION();
                         bool cpdone = WinAPI.CreateProcess(null, procline, IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
@@ -87,7 +133,7 @@ namespace SecureDesktop
 
                         if (cpdone)
                         {
-                            sf = new DesktopAgent(hProc, hNewDesktop, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\", tb);
+                            sf = new DesktopAgent(hProc, hNewDesktop, Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\", tb, dname);
 
                             Application.Run(sf);
                             ERROR = sf.ERROR;

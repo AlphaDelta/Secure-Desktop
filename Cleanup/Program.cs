@@ -50,6 +50,8 @@ namespace Cleanup
                 {
                     bool flag = false;
                     foreach (uint i in Procs) if (i == proc.th32ProcessID) { flag = true; break; }
+                    //TODO: Check if ctfmon.exe closes correctly, if not remove it from the filter
+                    //TODO: Rework this to rely on pointers rather than names so as to prevent malicious programs from bypassing cleanup
                     if (flag && proc.szExeFile != "ctfmon.exe" && proc.szExeFile != "Cleanup.exe")
                         //Console.WriteLine("Proc id: " + proc.th32ProcessID + "\nProc name: " + proc.szExeFile);
                         ProcList.Add(new ProcessInfo(proc.th32ProcessID, proc.szExeFile));

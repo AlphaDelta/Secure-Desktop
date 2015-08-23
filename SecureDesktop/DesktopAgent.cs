@@ -18,8 +18,10 @@ namespace SecureDesktop
         string cleanup = "";
         public int ERROR = -1;
         Taskbar tb;
-        public DesktopAgent(IntPtr Process, IntPtr Desktop, string location, Taskbar tb)
+        string DesktopName;
+        public DesktopAgent(IntPtr Process, IntPtr Desktop, string location, Taskbar tb, string dname)
         {
+            DesktopName = dname;
             cleanup = location + "cleanup.exe";
             if (Process == IntPtr.Zero) this.Close();
             if (Desktop == IntPtr.Zero) this.Close();
@@ -38,6 +40,7 @@ namespace SecureDesktop
             //this.Left = tb.Bounds.Left;
             //SetSize(tb.Bounds.Width, tb.Bounds.Height);
 
+#if HOOKS_ENABLED
             Gma.UserActivityMonitor.HookManager.KeyDown += KeyboardHookDown;
             Gma.UserActivityMonitor.HookManager.KeyUp += KeyboardHookUp;
 
@@ -46,6 +49,7 @@ namespace SecureDesktop
                 Gma.UserActivityMonitor.HookManager.KeyDown -= KeyboardHookDown;
                 Gma.UserActivityMonitor.HookManager.KeyUp -= KeyboardHookUp;
             };
+#endif
 
             //this.Opacity = 0;
 
@@ -68,7 +72,7 @@ namespace SecureDesktop
                     IntPtr hProc = IntPtr.Zero;
 
                     WinAPI.STARTUPINFO si = new WinAPI.STARTUPINFO();
-                    si.lpDesktop = "securedesktop";
+                    si.lpDesktop = DesktopName;
                     //si.dwFlags |= 0x00000020;
                     WinAPI.PROCESS_INFORMATION pi = new WinAPI.PROCESS_INFORMATION();
                     WinAPI.CreateProcess(null, cleanup + " -flag", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
@@ -103,6 +107,7 @@ namespace SecureDesktop
             this.Update();
         }
 
+#if HOOKS_ENABLED
         bool ctrl = false, shift = false, alt = false;
         void KeyboardHookDown(object sender, KeyEventArgs e)
         {
@@ -120,7 +125,7 @@ namespace SecureDesktop
                 if (File.Exists(cleanup))
                 {
                     WinAPI.STARTUPINFO si = new WinAPI.STARTUPINFO();
-                    si.lpDesktop = "securedesktop";
+                    si.lpDesktop = DesktopName;
                     //si.dwFlags |= 0x00000020;
                     WinAPI.PROCESS_INFORMATION pi = new WinAPI.PROCESS_INFORMATION();
                     WinAPI.CreateProcess(null, cleanup + " -view", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
@@ -138,7 +143,7 @@ namespace SecureDesktop
                 else if (File.Exists(@"C:\Windows\System32\taskmgr.exe"))
                 {
                     WinAPI.STARTUPINFO si = new WinAPI.STARTUPINFO();
-                    si.lpDesktop = "securedesktop";
+                    si.lpDesktop = DesktopName;
                     //si.dwFlags |= 0x00000020;
                     WinAPI.PROCESS_INFORMATION pi = new WinAPI.PROCESS_INFORMATION();
                     WinAPI.CreateProcess(null, @"C:\Windows\System32\taskmgr.exe", IntPtr.Zero, IntPtr.Zero, false, 0, IntPtr.Zero, null, ref si, out pi);
@@ -152,7 +157,8 @@ namespace SecureDesktop
             else if (e.KeyCode == Keys.LShiftKey || e.KeyCode == Keys.RShiftKey) shift = false;
             else if (e.KeyCode == Keys.LMenu || e.KeyCode == Keys.RMenu) alt = false;
         }
-
+#endif
+        
         public delegate void Action();
 
         Bitmap bitmap = null;
