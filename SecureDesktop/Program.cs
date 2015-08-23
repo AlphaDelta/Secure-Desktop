@@ -98,7 +98,7 @@ namespace SecureDesktop
             const int diff = max - min;
             for (int i = 0; i < 16; i++)
                 desktopname.Append(
-                    (char)(((int)Math.Abs(csprng.mem[i]) % diff) + min)
+                    (char)(((int)Math.Abs(csprng.rsl[i]) % diff) + min)
                     );
 
             string dname = desktopname.ToString();
